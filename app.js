@@ -202,14 +202,47 @@ function escapeHTML(str) {
 }
 
 function renderMarkdown(text) {
-    // Simple markdown renderer for bold and italic
+    // Simple markdown renderer for bold and italic, with math support
     let html = escapeHTML(text);
+    
+    // First, protect math expressions before processing other markdown
+    const mathBlocks = [];
+    let mathIndex = 0;
+    
+    // Replace block math \[...\] with placeholders
+    html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, content) => {
+        const placeholder = `__MATH_BLOCK_${mathIndex}__`;
+        mathBlocks[mathIndex] = { type: 'block', content: content.trim() };
+        mathIndex++;
+        return placeholder;
+    });
+    
+    // Replace inline math \(...\) with placeholders
+    html = html.replace(/\\\(([\s\S]*?)\\\)/g, (match, content) => {
+        const placeholder = `__MATH_INLINE_${mathIndex}__`;
+        mathBlocks[mathIndex] = { type: 'inline', content: content.trim() };
+        mathIndex++;
+        return placeholder;
+    });
+    
     // Convert **bold** to <strong>bold</strong> first
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     // Convert *italic* to <em>italic</em> (single asterisks not part of **)
     html = html.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
     // Convert _italic_ to <em>italic</em>
     html = html.replace(/_([^_\n]+?)_/g, '<em>$1</em>');
+    
+    // Restore math expressions as KaTeX renderable elements
+    mathBlocks.forEach((math, idx) => {
+        const placeholder = math.type === 'block' 
+            ? `__MATH_BLOCK_${idx}__` 
+            : `__MATH_INLINE_${idx}__`;
+        const mathElement = math.type === 'block'
+            ? `<span class="math-block">$$${math.content}$$</span>`
+            : `<span class="math-inline">$$${math.content}$$</span>`;
+        html = html.replace(placeholder, mathElement);
+    });
+    
     return html;
 }
 
@@ -229,8 +262,30 @@ function renderMessages(messages) {
         const msgText = document.createElement('span');
         msgText.className = 'msg-text';
         // Escape HTML for user messages, render markdown for AI messages
-        msgText.innerHTML = msg.role === 'user' ? escapeHTML(msg.content) : renderMarkdown(msg.content);
+        let content = msg.role === 'user' ? escapeHTML(msg.content) : renderMarkdown(msg.content);
         
+        // Render math expressions with KaTeX if available
+        if (msg.role === 'ai' && window.katex) {
+            // Replace math blocks with rendered KaTeX
+            content = content.replace(/<span class="math-block">\$\$([\s\S]*?)\$\$<\/span>/g, (match, math) => {
+                try {
+                    return '<div class="math-block">' + window.katex.renderToString(math.trim(), { displayMode: true, throwOnError: false }) + '</div>';
+                } catch (e) {
+                    return match; // Return original if rendering fails
+                }
+            });
+            
+            // Replace inline math with rendered KaTeX
+            content = content.replace(/<span class="math-inline">\$\$([\s\S]*?)\$\$<\/span>/g, (match, math) => {
+                try {
+                    return '<span class="math-inline">' + window.katex.renderToString(math.trim(), { displayMode: false, throwOnError: false }) + '</span>';
+                } catch (e) {
+                    return match; // Return original if rendering fails
+                }
+            });
+        }
+        
+        msgText.innerHTML = content;
         bubble.appendChild(msgText);
         
         if (msg.timestamp) {

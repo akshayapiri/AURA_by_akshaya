@@ -566,6 +566,32 @@ main {
   line-height: 1.6;
 }
 
+/* Math expressions styling */
+.bubble .math-block {
+  display: block;
+  margin: 1em 0;
+  padding: 0.5em;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.bubble .math-inline {
+  display: inline;
+  padding: 0.2em 0.4em;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .bubble .math-block {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .bubble .math-inline {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .bubble .timestamp {
   color: var(--sub-green);
   font-size: 0.75em;
