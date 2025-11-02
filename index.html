@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA by Akshaya</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside id="history-sidebar" class="history-sidebar">
+        <div class="sidebar-header">
+            <h2>AURA</h2>
+            <button id="close-sidebar" class="sidebar-close-btn" title="Close sidebar">×</button>
+        </div>
+        <button id="new-chat-sidebar" class="new-chat-sidebar-btn">
+            <span>+</span> New chat
+        </button>
+        <div class="sidebar-content">
+            <h3>Chats</h3>
+            <div id="chat-list" class="chat-list">
+                <!-- Chat history items will appear here -->
+            </div>
+        </div>
+    </aside>
+    <button id="open-sidebar" class="sidebar-toggle-btn" title="Open chat history">☰</button>
+    <header class="welcome-banner">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="main-title">AURA by Akshaya</h1>
+                <p class="subtitle">Your personalized AI assistant experience</p>
+            </div>
+            <div class="header-controls">
+                <button id="theme-toggle" class="icon-btn" title="Toggle dark mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="new-chat-btn" class="control-btn">+ New Chat</button>
+                <button id="clear-chat-btn" class="control-btn">Clear Chat</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="prompt-suggestions" class="prompt-suggestions">
+            <div class="prompt-grid">
+                <button class="prompt-btn" data-prompt="How do I make a perfect cup of tea?">How do I make a perfect cup of tea?</button>
+                <button class="prompt-btn" data-prompt="What are some easy recipes for dinner?">What are some easy recipes for dinner?</button>
+                <button class="prompt-btn" data-prompt="Can you explain quantum physics in simple terms?">Can you explain quantum physics in simple terms?</button>
+                <button class="prompt-btn" data-prompt="Tell me a fun fact about space.">Tell me a fun fact about space.</button>
+                <button class="prompt-btn" data-prompt="Give me tips for learning a new language.">Give me tips for learning a new language.</button>
+                <button class="prompt-btn" data-prompt="Write a short poem about nature.">Write a short poem about nature.</button>
+            </div>
+        </div>
+        <div id="chat-container" class="chat-container">
+            <!-- Chat messages appear here -->
+        </div>
+        <form id="chat-form" class="chat-form">
+            <input type="text" id="user-input" autocomplete="off" placeholder="Type your message..." required />
+            <button type="submit" id="send-btn">
+                <span>Send</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </form>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
