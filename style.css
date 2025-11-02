@@ -42,7 +42,7 @@ body {
   min-height: 100vh;
   height: 100vh;
   font-family: 'Quicksand', sans-serif;
-  background: linear-gradient(135deg, var(--sub-cream) 70%, var(--secondary) 100%);
+  background: var(--sub-cream);
   color: var(--text-main);
   display: flex;
   flex-direction: column;
@@ -420,7 +420,7 @@ main {
 .prompt-suggestions {
   width: 100%;
   max-width: var(--max-width);
-  margin: 1em auto 0.5em auto;
+  margin: 0.8em auto 0.5em auto;
   padding: 0 2em 0 25%;
   opacity: 1;
   transition: opacity 0.3s ease;
@@ -476,10 +476,10 @@ main {
   box-shadow: none;
   width: 100%;
   max-width: 100%;
-  height: calc(100vh - 320px);
+  height: calc(100vh - 260px);
   overflow-y: auto;
   margin: 0;
-  padding: 1em 2em 1em 25%;
+  padding: 0.8em 2em 0.8em 25%;
   display: flex;
   flex-direction: column;
   gap: 0.6em;
@@ -548,7 +548,7 @@ main {
 }
 
 .bubble.user {
-  background: linear-gradient(135deg, var(--bubble-user) 0%, #FFFFFF 100%);
+  background: var(--bubble-user);
   align-self: flex-end;
   color: var(--primary);
   border: 2px solid var(--outline-main);
@@ -565,7 +565,7 @@ main {
 }
 
 .bubble.ai {
-  background: linear-gradient(135deg, var(--bubble-ai) 0%, #e8b2b6 100%);
+  background: var(--bubble-ai);
   align-self: flex-start;
   color: var(--text-main);
   border: 2px solid var(--outline-main);
@@ -652,8 +652,8 @@ main {
   display: flex;
   width: 100%;
   max-width: 100%;
-  padding: 1em 2em 1.5em 25%;
-  gap: 1em;
+  padding: 0.5em 2em 0.5em 25%;
+  gap: 0.8em;
   align-items: center;
   background: var(--surface);
   border-top: 1px solid rgba(139, 26, 26, 0.1);
@@ -661,13 +661,31 @@ main {
   overflow: visible;
   position: relative;
   z-index: 100;
-  margin-bottom: 0.5em;
+  margin: 0;
+}
+
+/* Hide browser extension annotation buttons */
+.chat-form button[title*="Annotate"],
+.chat-form button[aria-label*="Annotate"],
+.chat-form [class*="annotate"],
+.chat-form [id*="annotate"],
+.chat-form [data-action*="annotate"],
+.chat-form ~ [class*="annotation"],
+.chat-form ~ [id*="annotation"] {
+  display: none !important;
+}
+
+/* Hide any green pencil/annotation icons before the input */
+.chat-form > button:first-child:not(#send-btn),
+.chat-form > [class*="pencil"],
+.chat-form > [class*="annotate"] {
+  display: none !important;
 }
 
 #user-input {
   flex: 1;
   font-size: 1em;
-  padding: 0.85em 1.4em;
+  padding: 0.7em 1.2em;
   border-radius: 25px;
   border: 2px solid rgba(139, 26, 26, 0.3);
   outline: none;
@@ -714,9 +732,9 @@ main {
 }
 
 #send-btn {
-  background: linear-gradient(135deg, var(--primary) 0%, #FF2D55 100%);
+  background: var(--primary);
   color: #F8EFEA;
-  padding: 0.7em 1.5em;
+  padding: 0.7em 1.2em;
   border-radius: 25px;
   border: 2px solid var(--sub-green);
   font-weight: 600;
@@ -735,7 +753,7 @@ main {
 }
 
 #send-btn:hover {
-  background: linear-gradient(135deg, var(--accent) 0%, #6AB04A 100%);
+  background: var(--accent);
   color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(106, 176, 74, 0.4);
@@ -815,8 +833,8 @@ main {
   }
   
   .chat-form {
-    padding: 1em 1em 1.5em 1em;
-    margin-bottom: 0.5em;
+    padding: 0.5em;
+    margin: 0;
   }
   
   .bubble {

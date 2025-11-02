@@ -491,6 +491,46 @@ function showPromptSuggestions() {
     }
 }
 
+// ------- Remove unwanted annotation buttons from browser extensions -------
+function removeAnnotationButtons() {
+    // Remove any annotation/annotate buttons near the chat form
+    const chatForm = document.getElementById('chat-form');
+    if (chatForm) {
+        // Remove buttons before the input field that aren't our send button
+        const buttons = chatForm.querySelectorAll('button');
+        buttons.forEach(btn => {
+            if (btn.id !== 'send-btn' && (btn.textContent.includes('Annotate') || btn.querySelector('[class*="pencil"], [class*="annotate"]'))) {
+                btn.remove();
+            }
+        });
+        
+        // Remove any elements with annotation-related classes/ids
+        const annotations = chatForm.querySelectorAll('[class*="annotate"], [id*="annotate"], [class*="pencil"]');
+        annotations.forEach(el => {
+            if (el.id !== 'send-btn' && !el.closest('#send-btn')) {
+                el.remove();
+            }
+        });
+    }
+    
+    // Also check for elements injected before/after the form
+    const input = document.getElementById('user-input');
+    if (input) {
+        const siblings = Array.from(input.parentElement.children);
+        siblings.forEach(sibling => {
+            if (sibling !== input && sibling.id !== 'send-btn' && 
+                (sibling.textContent.includes('Annotate') || 
+                 sibling.querySelector('[class*="pencil"], [class*="annotate"]'))) {
+                sibling.remove();
+            }
+        });
+    }
+}
+
+// Run on page load and periodically to catch dynamically injected elements
+removeAnnotationButtons();
+setInterval(removeAnnotationButtons, 500);
+
 // ------- UI Event Handling -------
 // Initialize prompts on page load
 updatePromptSuggestions(true);
