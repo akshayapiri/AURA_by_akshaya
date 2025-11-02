@@ -98,6 +98,7 @@ function startNewChat() {
     chatMessages = [];
     addMessage(chatMessages, 'ai', "Hi! I'm AURA!! Nice to meet you <3 How can I help you today?");
     renderMessages(chatMessages);
+    updatePromptSuggestions(); // Update prompts for new chat
     showPromptSuggestions();
 }
 
@@ -406,17 +407,76 @@ async function fetchAIReply(messages, userMsg) {
 
 // ------- Prompt Suggestions -------
 const promptSuggestions = document.getElementById('prompt-suggestions');
-const promptButtons = document.querySelectorAll('.prompt-btn');
+const promptGrid = document.querySelector('.prompt-grid');
 
-promptButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const prompt = btn.getAttribute('data-prompt');
-        userInput.value = prompt;
-        userInput.focus();
-        hidePromptSuggestions();
-        chatForm.dispatchEvent(new Event('submit'));
+// Multiple sets of prompt suggestions for variety
+const promptSets = [
+    [
+        "How do I make a perfect cup of tea?",
+        "What are some easy recipes for dinner?",
+        "Can you explain quantum physics in simple terms?",
+        "Tell me a fun fact about space.",
+        "Give me tips for learning a new language.",
+        "Write a short poem about nature."
+    ],
+    [
+        "What's the best way to stay productive?",
+        "Explain climate change in simple terms.",
+        "What are some creative writing prompts?",
+        "How can I improve my focus?",
+        "Tell me about ancient civilizations.",
+        "What's a good workout routine for beginners?"
+    ],
+    [
+        "Help me plan a weekend trip.",
+        "What are some mindfulness techniques?",
+        "Explain how the internet works.",
+        "Give me tips for better sleep.",
+        "What's the history of coffee?",
+        "How do I start a garden?"
+    ],
+    [
+        "What are some good study techniques?",
+        "Explain the water cycle.",
+        "What are healthy breakfast ideas?",
+        "Tell me about renewable energy.",
+        "How can I be more creative?",
+        "What's the meaning of life?"
+    ],
+    [
+        "What are some productivity apps?",
+        "Explain photosynthesis simply.",
+        "How do I manage stress?",
+        "What's interesting about the ocean?",
+        "Give me cooking tips for beginners.",
+        "What are some fun science experiments?"
+    ]
+];
+
+let currentPromptSetIndex = 0;
+
+function updatePromptSuggestions(resetIndex = false) {
+    // Rotate through different prompt sets for each new chat
+    if (!resetIndex) {
+        currentPromptSetIndex = (currentPromptSetIndex + 1) % promptSets.length;
+    }
+    const prompts = promptSets[currentPromptSetIndex];
+    
+    promptGrid.innerHTML = '';
+    prompts.forEach(prompt => {
+        const btn = document.createElement('button');
+        btn.className = 'prompt-btn';
+        btn.setAttribute('data-prompt', prompt);
+        btn.textContent = prompt;
+        btn.addEventListener('click', () => {
+            userInput.value = prompt;
+            userInput.focus();
+            hidePromptSuggestions();
+            chatForm.dispatchEvent(new Event('submit'));
+        });
+        promptGrid.appendChild(btn);
     });
-});
+}
 
 function hidePromptSuggestions() {
     promptSuggestions.classList.add('hidden');
@@ -424,11 +484,16 @@ function hidePromptSuggestions() {
 
 function showPromptSuggestions() {
     if (chatMessages.length <= 1) {
+        if (!promptGrid.hasChildNodes()) {
+            updatePromptSuggestions();
+        }
         promptSuggestions.classList.remove('hidden');
     }
 }
 
 // ------- UI Event Handling -------
+// Initialize prompts on page load
+updatePromptSuggestions(true);
 // Start with a new chat on page load
 startNewChat();
 renderChatHistory();
